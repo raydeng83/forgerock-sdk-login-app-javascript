@@ -26,7 +26,10 @@ const handlers = {
         });
     },
     Error: (step) => {
-        document.querySelector('#Error span').innerHTML = step.getCode();
+        // document.querySelector('#Error span').innerHTML = step.getCode();
+        document.getElementById('Error').style.visibility = 'visible';
+        document.getElementById("username").value = '';
+        document.getElementById("password").value = '';
     },
     [FATAL]: (step) => {},
 };
@@ -39,7 +42,7 @@ const showStep = (handler) => {
         console.error(`No panel with ID "${handler}"" found`);
         return false;
     }
-    document.getElementById(handler).classList.add('active');
+    // document.getElementById(handler).classList.add('active');
     return true;
 };
 
@@ -79,19 +82,16 @@ const handleStep = async (step) => {
             // If we have a session token, get user information
             const sessionToken = step.getSessionToken();
             if (sessionToken !== null) {
-                const usernamePassword = document.getElementById("UsernamePassword");
-                usernamePassword.style.visibility = 'hidden';
-                const displayLoggedIn = document.getElementById("displayLoggedIn");
-                displayLoggedIn.style.visibility = 'visible';
+                const usernamePassword = document.getElementById("UsernamePassword").style.visibility = 'hidden';
+                const displayLoggedIn = document.getElementById("displayLoggedIn").style.visibility = 'visible';
+                document.getElementById('Error').style.visibility = 'hidden';
             }
 
             return showLoggedIn();
-            // const tokens = await forgerock.TokenManager.getTokens();
-            // const user = await forgerock.UserManager.getCurrentUser();
-            // return showUser(user);
         }
 
         case 'LoginFailure': {
+            console.log('Login failed');
             showStep('Error');
             handlers['Error'](step);
             return;
